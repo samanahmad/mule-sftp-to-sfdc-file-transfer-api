@@ -135,7 +135,13 @@
             <classifier>mule-plugin</classifier>
         </dependency>
     </dependencies>
-
+	<distributionManagement>
+       <repository>
+         <id>internal.repo</id>
+         <name>Internal repo</name>
+         <url>file:///C:/snapshots</url>
+       </repository>
+   </distributionManagement>
 	<repositories>
           <repository>
             <id>anypoint-exchange-v2</id>
