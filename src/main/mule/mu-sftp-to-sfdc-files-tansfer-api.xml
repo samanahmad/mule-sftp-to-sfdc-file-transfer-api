@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:email="http://www.mulesoft.org/schema/mule/email"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:compression="http://www.mulesoft.org/schema/mule/compression" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/compression http://www.mulesoft.org/schema/mule/compression/current/mule-compression.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	
+	<flow name="mu-sftp-to-sfdc-files-tansfer-apiFlow" doc:id="8fb99606-ccf8-40d7-b7d4-6e31d2499006" >
+		<scheduler doc:name="Scheduler" doc:id="99828494-4190-4c32-94cb-a7e7fac55e67" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="${scheduler.numberOfMinutes}" timeUnit="MINUTES" startDelay="${scheduler.delay}"/>
+			</scheduling-strategy>
+		</scheduler>
+		<logger level="INFO" doc:name="Start of mf-file-transfer-flow" doc:id="34110801-bed2-4726-a890-2a2cbfd3c4ac" message='#["Start of mf-file-transfer-flow"]' category="mf-file-transfer-flow"/>
+		<sftp:list doc:name="List the files from source directory" doc:id="eca82ecb-b645-4c74-875e-be4d8cd7bf0c" config-ref="SFTP_Config" directoryPath="docs"/>
+		<foreach doc:name="For Each" doc:id="bfb9feeb-ffa9-44a8-869a-ff247a6c7649" >
+			<set-variable value="#[attributes.fileName]" doc:name="Set fileName variable" doc:id="e76a8cb1-e9f8-484c-afb2-44c47e3947f5" variableName="fileName"/>
+			<compression:extract doc:name="Extract each zipped file" doc:id="68956fde-5acb-4a59-a7da-d2f6f8564ce3" >
+				<repeatable-in-memory-stream />
+				<compression:extractor >
+					<compression:zip-extractor />
+				</compression:extractor>
+			</compression:extract>
+			<ee:transform doc:name="DW file Info" doc:id="e0d4e71a-6a74-4049-a17b-26b2e95754a4" >
+				<ee:message >
+					<ee:set-payload resource="dataweave/v-file-properties.dwl" />
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="countXmlFile" ><![CDATA[%dw 2.0
+output application/java
+---
+0]]></ee:set-variable>
+					<ee:set-variable variableName="countPdfFile" ><![CDATA[%dw 2.0
+output application/java
+---
+0]]></ee:set-variable>
+					<ee:set-variable variableName="countJpegFile" ><![CDATA[%dw 2.0
+output application/java
+---
+0]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<foreach doc:name="For Each" doc:id="14a3f86d-b448-496e-8f74-a05ac600df1a" collection="#[payload]">
+				<flow-ref doc:name="Flow Reference to sf-check-file-type" doc:id="f40850a0-a05a-4380-9d76-d4d873f66d25" name="sf-check-file-type"/>
+			</foreach>
+			<flow-ref doc:name="Flow Reference to sf-archive-folder" doc:id="ea54b4bd-0ad7-4a6a-908f-b6811fcaf745" name="sf-archive-folder" />
+			<logger level="INFO" doc:name="Files Archived successfully" doc:id="2fde2928-ae13-446b-8794-56916627f15c" message='#["Files Archived successfully. JPEG Files:: " ++  (vars.countImageFile default 0 )++  " XML Files:: " ++ (vars.countXmlFile default 0) ++ " PDF Files:: " ++ (vars.countPdfFile default 0)]' category="mf-file-transfer-flow"/>
+			<ee:transform doc:name="DW Set Request to   Create record in sfdc" doc:id="95046f18-30f2-4b6c-82e4-1e88aad2d311">
+				<ee:message>
+					<ee:set-payload resource="dataweave/p-create-records.dwl" />
+				</ee:message>
+				<ee:variables>
+				</ee:variables>
+			</ee:transform>
+			<flow-ref doc:name="Flow Reference to sf-sfdc-create" doc:id="9d7a2f64-d20f-42fa-aa65-d51604296b4b" name="sf-sfdc-create"/>
+			<sftp:delete doc:name="Delete the file from source directory" doc:id="ab580748-f8d4-4dbd-a911-5805d49079ec" config-ref="SFTP_Config" path='#["docs/" ++ vars.fileName]'/>
+			<logger level="INFO" doc:name="file processed and sent to salesforce successfully" doc:id="d8c61f69-4214-40d2-ac04-d80ca17542e3" message='#["file:: " ++ vars.fileName ++ "processed and sent to salesforce successfully"]'/>
+			
+			
+			
+		</foreach>
+		<logger level="INFO" doc:name="All files processed successfully" doc:id="0583171b-5050-4a75-a04c-9eebb22adcdb" message='#["All files processed successfully"]' category="mf-file-transfer-flow"/>
+		<error-handler ref="global-error-handler" />
+	</flow>
+
+	<sub-flow name="sf-check-file-type" doc:id="52801b99-d37d-4492-9fd0-b95f2f4c0618" >
+		<choice doc:name="Choice" doc:id="b41946bb-8f52-4983-ab97-4b3af4af8c3b">
+				<when expression='#[(payload.fileName) contains ".jpeg"]'>
+					<ee:transform doc:name="DW imageFile variable" doc:id="e9093d03-cd7f-41ac-9fc0-b813321bc5c3">
+						<ee:message>
+						</ee:message>
+						<ee:variables>
+						<ee:set-variable resource="dataweave/v-imageFile.dwl" variableName="imageFile" />
+						<ee:set-variable resource="dataweave/v-countImageFile.dwl" variableName="countImageFile" />
+						</ee:variables>
+					</ee:transform>
+				</when>
+			<when expression='#[(payload.fileName) contains ".pdf"]'>
+				<ee:transform doc:name="DW pdfFile variable" doc:id="3dcdf705-8dce-4769-8044-24349e8fc7a3" >
+					<ee:message >
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable resource="dataweave/v-pdfFile.dwl" variableName="pdfFile" />
+						<ee:set-variable resource="dataweave/v-countpdfFile.dwl" variableName="countpdfFile" />
+					</ee:variables>
+				</ee:transform>
+			</when>
+			<when expression='#[(payload.fileName) contains ".xml"]'>
+				<ee:transform doc:name="DW xmlFile variable" doc:id="156e4963-1fff-4abc-8519-6d585350b35b" >
+					<ee:message >
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable resource="dataweave/v-countXmlFile.dwl" variableName="countXmlFile" />
+						<ee:set-variable resource="dataweave/v-xmlFile.dwl" variableName="xmlFile" />
+					</ee:variables>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<logger level="INFO" doc:name="File type not valid" doc:id="6e84fddf-f62a-4ca7-8398-e829de4df960" message='#["File type not valid"]' category="sf-check-file-type"/>
+			</otherwise>
+			</choice>
+	</sub-flow>
+		<sub-flow name="sf-archive-folder" doc:id="01fd26ea-79e1-4942-a41f-0b9ac19a3c4e" >
+		<scatter-gather doc:name="Scatter-Gather" doc:id="7b13b02c-11ef-4952-b870-833d4502386a" maxConcurrency="3">
+			<route >
+				<compression:archive doc:name="Archive XML files folder" doc:id="9d4f97e1-25b1-48c0-bac7-ccbab709fa91">
+				<compression:entries><![CDATA[#[vars.xmlFile]]]></compression:entries>
+				<compression:archiver>
+					<compression:zip-archiver />
+				</compression:archiver>
+			</compression:archive>
+				<ee:transform doc:name="DW xmlArchivedFile variable" doc:id="f2b72981-73fb-4c2c-8b98-452789575575" >
+					<ee:message >
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable resource="dataweave/v-xmlArchivedFile.dwl" variableName="xmlArchivedFile" />
+					</ee:variables>
+				</ee:transform>
+			</route>
+			<route>
+			<compression:archive doc:name="Archive JPEG files folder" doc:id="4eb11888-9889-49d7-ab47-9ca655afb80e" >
+				<compression:entries ><![CDATA[#[vars.imageFile]]]></compression:entries>
+				<compression:archiver >
+					<compression:zip-archiver />
+				</compression:archiver>
+			</compression:archive>
+				<ee:transform doc:name="DW jpegArchivedFile variable" doc:id="37e5d5a3-2964-458f-b843-744edc99bc50" >
+					<ee:message >
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable resource="dataweave/v-jpegArchivedFile.dwl" variableName="jpegArchivedFile" />
+					</ee:variables>
+				</ee:transform>
+			
+			
+</route>
+			<route>
+			<compression:archive doc:name="Archive PDF files folder" doc:id="ff2517b4-7dd6-45fe-bc8b-c1bf53231948" >
+				<compression:entries ><![CDATA[#[vars.pdfFile]]]></compression:entries>
+				<compression:archiver >
+					<compression:zip-archiver />
+				</compression:archiver>
+			</compression:archive>
+				<ee:transform doc:name="DW pdfArchivedFile variable" doc:id="400b3928-a5d1-4989-97a4-d4552648abd2" >
+					<ee:message >
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable resource="dataweave/v-pdfArchivedFile.dwl" variableName="pdfArchivedFile" />
+					</ee:variables>
+				</ee:transform>
+			
+</route>
+		</scatter-gather>
+		
+</sub-flow>
+	<sub-flow name="sf-sfdc-create" doc:id="25c0ed48-01fe-43eb-b1f1-2fed538bcef2" >
+	<logger level="INFO" doc:name="Start of sfdc-create sub-flow" doc:id="c08165ed-7ff4-43ee-89f4-c20246ee7422" message='#["Start of sfdc-create sub-flow"]' category="sf-sfdc-create"/>
+		<try doc:name="Try" doc:id="1362c0b0-be44-4781-b114-d77c4f64629a" >
+			<until-successful maxRetries="${untilSuccessful.retries}" doc:name="Until Successful" doc:id="370d188d-79fb-4655-b80d-4bee2013eb1a" millisBetweenRetries="${untilSuccessful.frequency}">
+				<http:request method="POST" doc:name="Request to SFDC Sys API to Create record in salesforce" doc:id="2ffcea34-234b-440d-9bd7-906d5b560bce" config-ref="HTTP_Request_configuration" path="${http.path.create}">
+				<http:headers><![CDATA[#[output application/java
+---
+{
+	"client_secret" : p('secure::sfdc.client_secret'),
+	"client_id" : p('secure::sfdc.client_id')
+}]]]></http:headers>
+				<http:query-params><![CDATA[#[output application/java
+---
+{
+	"recordType" : "Website_Content__c"
+}]]]></http:query-params>
+			</http:request>
+			</until-successful>
+			<error-handler >
+				<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="afabe641-9af8-446f-849e-0cba35b569c0" >
+					<logger level="ERROR" doc:name="Error while sending file data to salesforce" doc:id="47990843-20f2-4828-9c58-c674f2c5c260" message='#["Error while sending file data to salesforce"]' category="sf-sfdc-create"/>
+				</on-error-propagate>
+			</error-handler>
+		</try>
+			<logger level="INFO" doc:name="Archived File transfered to Salesforce Successfully" doc:id="eca1bfa9-e74b-46f3-820c-07a55f199afb" message='#["Archived File transfered to Salesforce Successfully"]' category="sf-sfdc-create"/>
+	</sub-flow>
+</mule>

@@ -1,0 +1,29 @@
+http:
+  host: "mule-salesforce-system-api.us-e2.cloudhub.io"
+  basepath: "/api/v1"
+  path: 
+    query: "/query"
+    create: "/create"
+    update: "/update"
+
+untilSuccessful:
+  retries: "3"
+  frequency: "10000"
+
+scheduler:
+  numberOfMinutes: "3"
+  delay: "0"
+  
+sftp:
+  host: "localhost"
+  port: "22"
+  username: "![LcCuYhFGrTIYUyXVNRkhiA==]"
+  password: "![Hv+QoJnDTPBCUCByhUpGbw==]"
+
+sfdc:
+  client_id: "![JNjv43aQy8v+0K698JNSh6do0daiQmWr4b0AIBo41XUbLOUMocruwe2pvI4///x7]"
+  client_secret: "![eDoTfsX0P9LO71YLYEd76L3KGTzqkpnsbf4N05947bYWPCEX1RrwmWzo7Cyi9fIk]"
+  
+ap:
+  username: "![FFgl2bWJ4xuLB5t5nDmzig==]"
+  password: "![dM/npAdb3eYzs4PJz32DDw==]"

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:cloudhub="http://www.mulesoft.org/schema/mule/cloudhub"
+	xmlns:sftp="http://www.mulesoft.org/schema/mule/sftp" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/sftp http://www.mulesoft.org/schema/mule/sftp/current/mule-sftp.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/cloudhub http://www.mulesoft.org/schema/mule/cloudhub/current/mule-cloudhub.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="d75f5042-02dc-4b92-9b1d-d5648010d690" basePath="${http.basepath}" >
+		<http:request-connection host="${http.host}" />
+	</http:request-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="07d7a6f4-4ad9-4704-9b9d-e5306a50bd48" file="properties\dev-properties.yaml" />
+	<sftp:config name="SFTP_Config" doc:name="SFTP Config" doc:id="b4202bcf-8cca-4146-98f3-208367a5e688" >
+		<sftp:connection workingDir="root" host="${sftp.host}" username="${secure::sftp.username}" password="${secure::sftp.password}" port="${sftp.port}">
+			<pooling-profile maxIdle="0" maxActive="1"/>
+			<sftp:preferred-authentication-methods />
+		</sftp:connection>
+	</sftp:config>
+
+	<cloudhub:config name="CloudHub_Config" doc:name="CloudHub Config" doc:id="da0efe4f-3411-443b-ac06-53807ba69d51" >
+		<cloudhub:connection username="${secure::ap.username}" password="${secure::ap.password}" environment="a7a35c78-c369-4280-840e-9013de094efd" />
+	</cloudhub:config>
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="89ee390c-2844-4dab-885b-6c0aead31dbe" file="properties\dev-properties.yaml" key="Apisero@12345678" />
+</mule>

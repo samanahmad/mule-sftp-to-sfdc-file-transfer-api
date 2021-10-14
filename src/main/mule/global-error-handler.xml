@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:cloudhub="http://www.mulesoft.org/schema/mule/cloudhub"
+	xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/cloudhub http://www.mulesoft.org/schema/mule/cloudhub/current/mule-cloudhub.xsd">
+
+	<error-handler name="global-error-handler" doc:id="c3d79ad7-7776-43ca-936a-7a77584812ee" >
+	<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="9f9d46f7-b984-4a34-8780-df8e60287926" type="ANY">
+		<logger level="INFO" doc:name="Log Message" doc:id="ce8398d0-d78e-4211-bd43-0a5d7f551360" message=":::: inside global-error-handler " category="global-error-handler"/>
+			<ee:transform doc:name="DW Set Error Description" doc:id="6d877c80-a748-46a5-9bcd-73952f080e40" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output text/plain
+---
+write({
+	
+	"errorCode": error.errorType.identifier,
+	"errorDescription": error.description
+}, "application/json")]]></ee:set-payload>
+				</ee:message>
+				<ee:variables >
+				</ee:variables>
+			</ee:transform>
+			<cloudhub:create-notification doc:name="Create Notification" doc:id="46a0dc70-30ed-4cc1-8513-d9b9f43fad06" config-ref="CloudHub_Config" domain="sftp-to-sfdc-files-transfer-api" priority="ERROR" transactionId="#[correlationId]"/>
+	</on-error-continue>
+	
+</error-handler>		
+	
+</mule>

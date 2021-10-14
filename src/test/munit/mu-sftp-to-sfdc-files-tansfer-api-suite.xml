@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="mu-sftp-to-sfdc-files-tansfer-api-suite.xml" />
+	<flow name="mock-flow-ref" doc:id="cd81be3e-16f8-4c9a-bf09-70ce150d2e56" >
+		<try doc:name="Try" doc:id="bc5231bb-859e-4311-a263-a04f98e1a1f6" >
+			<munit-tools:retrieve doc:name="Retrieve" doc:id="0504be8b-6bf7-4d75-96dd-4102faddd43c" key="Mock Flow Reference to sf-check-file-type"/>
+			<error-handler >
+				<on-error-continue enableNotifications="false" logException="false" doc:name="On Error Continue" doc:id="69e3089f-03ed-4dde-a008-384c2ae36234" type="ANY">
+					<set-payload value="#[1]" doc:name="Set Payload" doc:id="d34ac7a3-b445-45d9-8cb0-46a99713e981" />
+				</on-error-continue>
+			</error-handler>
+		</try>
+		<munit-tools:store doc:name="Store" doc:id="ae323886-2eda-4750-b386-9f205b694164" key="Mock Flow Reference to sf-check-file-type">
+			<munit-tools:value ><![CDATA[#[payload + 1]]]></munit-tools:value>
+		</munit-tools:store>
+		<choice doc:name="Choice" doc:id="8286c29b-6897-437d-9b1b-7076ee9cfdbb" >
+			<when expression="#[payload == 1]">
+				<munit:set-event doc:name="Set Event" doc:id="da61141e-6a3f-4924-bde4-cfe38bacde75" >
+					<munit:payload value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_payload3.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					<munit:variables >
+						<munit:variable key="rootMessage" value="#[readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_15.dwl')]" />
+						<munit:variable key="fileName" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_16.dwl')]" encoding="UTF-8" mediaType="application/java" />
+						<munit:variable key="counter" value="#[readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_17.dwl')]" />
+					</munit:variables>
+				</munit:set-event>
+			</when>
+			<when expression="#[payload == 2]">
+				<munit:set-event doc:name="Set Event" doc:id="dc39b651-c6fc-4fbd-b3df-a57ad0afed90" >
+					<munit:payload value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_payload4.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					<munit:variables >
+						<munit:variable key="rootMessage" value="#[readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_18.dwl')]" />
+						<munit:variable key="fileName" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_19.dwl')]" encoding="UTF-8" mediaType="application/java" />
+						<munit:variable key="countXmlFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_20.dwl')]" encoding="UTF-8" mediaType="application/java" />
+						<munit:variable key="counter" value="#[readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_21.dwl')]" />
+						<munit:variable key="xmlFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_22.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					</munit:variables>
+				</munit:set-event>
+			</when>
+			<when expression="#[payload == 3]">
+				<munit:set-event doc:name="Set Event" doc:id="06b4d29b-eee8-48fb-8095-9e92ce21123c" >
+					<munit:payload value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_payload5.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					<munit:variables >
+						<munit:variable key="countImageFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_23.dwl')]" encoding="UTF-8" mediaType="application/java" />
+						<munit:variable key="fileName" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_24.dwl')]" encoding="UTF-8" mediaType="application/java" />
+						<munit:variable key="rootMessage" value="#[readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_25.dwl')]" />
+						<munit:variable key="countXmlFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_26.dwl')]" encoding="UTF-8" mediaType="application/java" />
+						<munit:variable key="imageFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_27.dwl')]" encoding="UTF-8" mediaType="application/java" />
+						<munit:variable key="counter" value="#[readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_28.dwl')]" />
+						<munit:variable key="xmlFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_29.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					</munit:variables>
+				</munit:set-event>
+			</when>
+			<when expression="#[payload == 4]">
+				<munit:set-event doc:name="Set Event" doc:id="deeb454e-94ee-416c-9b71-3a658779ce74" >
+					<munit:payload value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_payload6.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					<munit:variables >
+						<munit:variable key="countImageFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_30.dwl')]" encoding="UTF-8" mediaType="application/java" />
+						<munit:variable key="fileName" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_31.dwl')]" encoding="UTF-8" mediaType="application/java" />
+						<munit:variable key="rootMessage" value="#[readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_32.dwl')]" />
+						<munit:variable key="countXmlFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_33.dwl')]" encoding="UTF-8" mediaType="application/java" />
+						<munit:variable key="imageFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_34.dwl')]" encoding="UTF-8" mediaType="application/java" />
+						<munit:variable key="counter" value="#[readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_35.dwl')]" />
+						<munit:variable key="xmlFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_36.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					</munit:variables>
+				</munit:set-event>
+			</when>
+			<when expression="#[payload == 5]">
+				<munit:set-event doc:name="Set Event" doc:id="c0361a88-e0bc-4643-993c-87f86218a5f9" >
+					<munit:payload value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_payload7.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					<munit:variables >
+						<munit:variable key="pdfFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_37.dwl')]" encoding="UTF-8" mediaType="application/java" />
+						<munit:variable key="countImageFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_38.dwl')]" encoding="UTF-8" mediaType="application/java" />
+						<munit:variable key="fileName" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_39.dwl')]" encoding="UTF-8" mediaType="application/java" />
+						<munit:variable key="rootMessage" value="#[readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_40.dwl')]" />
+						<munit:variable key="countpdfFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_41.dwl')]" encoding="UTF-8" mediaType="application/java" />
+						<munit:variable key="countXmlFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_42.dwl')]" encoding="UTF-8" mediaType="application/java" />
+						<munit:variable key="imageFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_43.dwl')]" encoding="UTF-8" mediaType="application/java" />
+						<munit:variable key="counter" value="#[readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_44.dwl')]" />
+						<munit:variable key="xmlFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_45.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					</munit:variables>
+				</munit:set-event>
+			</when>
+			<when expression="#[payload == 6]">
+				<munit:set-event doc:name="Set Event" doc:id="40e8fc23-8af6-4890-b726-733aeab7cc04" >
+					<munit:payload value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_payload8.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					<munit:variables >
+						<munit:variable key="pdfFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_46.dwl')]" encoding="UTF-8" mediaType="application/java" />
+						<munit:variable key="countImageFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_47.dwl')]" encoding="UTF-8" mediaType="application/java" />
+						<munit:variable key="fileName" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_48.dwl')]" encoding="UTF-8" mediaType="application/java" />
+						<munit:variable key="rootMessage" value="#[readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_49.dwl')]" />
+						<munit:variable key="countpdfFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_50.dwl')]" encoding="UTF-8" mediaType="application/java" />
+						<munit:variable key="countXmlFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_51.dwl')]" encoding="UTF-8" mediaType="application/java" />
+						<munit:variable key="imageFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_52.dwl')]" encoding="UTF-8" mediaType="application/java" />
+						<munit:variable key="counter" value="#[readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_53.dwl')]" />
+						<munit:variable key="xmlFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_54.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					</munit:variables>
+				</munit:set-event>
+			</when>
+			<otherwise >
+				<munit-tools:fail doc:name="Fail" doc:id="6595c5ad-3f38-485f-99a5-dcc1c349d0dd" message="There are no more events to mock"/>
+			</otherwise>
+		</choice>
+	</flow>
+	<munit:test name="mu-sftp-to-sfdc-files-tansfer-apiFlow-test" doc:id="d926a78f-687d-49e4-9b69-b71b3c66b590" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Extract each zipped file" doc:id="22eaeb0c-e6c9-47ed-875e-b3e1d3621851" processor="compression:extract">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="68956fde-5acb-4a59-a7da-d2f6f8564ce3" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_payload.dwl')]" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="rootMessage" value="#[readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_.dwl')]" />
+						<munit-tools:variable key="fileName" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="counter" value="#[readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_2.dwl')]" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock List the files from source directory" doc:id="b8de0c16-fc59-4af5-b768-9dbca2f522ec" processor="sftp:list">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="eca82ecb-b645-4c74-875e-be4d8cd7bf0c" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_payload1.dwl')]" encoding="UTF-8" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Flow Reference to sf-archive-folder" doc:id="f19fa052-22ee-496c-8b43-52da30370b7f" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="ea54b4bd-0ad7-4a6a-908f-b6811fcaf745" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_payload2.dwl')]" />
+					<munit-tools:variables >
+						<munit-tools:variable key="pdfFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_3.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="countImageFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_4.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="fileName" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_5.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="rootMessage" value="#[readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_6.dwl')]" />
+						<munit-tools:variable key="countpdfFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_7.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="countXmlFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_8.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="imageFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_9.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="xmlArchivedFile" value="#[output application/json --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_10.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="pdfArchivedFile" value="#[output application/json --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_11.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="jpegArchivedFile" value="#[output application/json --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_12.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="counter" value="#[readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_13.dwl')]" />
+						<munit-tools:variable key="xmlFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_14.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Flow Reference to sf-check-file-type" doc:id="2562ace5-2385-4ab9-99f9-4e7b9402b9dd" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="f40850a0-a05a-4380-9d76-d4d873f66d25" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-call flow="mock-flow-ref" />
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Delete the file from source directory" doc:id="061ed7f7-65ee-43b4-a913-d06a1e200417" processor="sftp:delete">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="ab580748-f8d4-4dbd-a911-5805d49079ec" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_payload9.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					<munit-tools:attributes value="#[readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_attributes.dwl')]" />
+					<munit-tools:variables >
+						<munit-tools:variable key="pdfFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_55.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="countImageFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_56.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="fileName" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_57.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="rootMessage" value="#[readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_58.dwl')]" />
+						<munit-tools:variable key="countpdfFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_59.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="countXmlFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_60.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="imageFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_61.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="xmlArchivedFile" value="#[output application/json --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_62.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="pdfArchivedFile" value="#[output application/json --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_63.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="jpegArchivedFile" value="#[output application/json --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_64.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="counter" value="#[readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_65.dwl')]" />
+						<munit-tools:variable key="xmlFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_66.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Flow Reference to sf-sfdc-create" doc:id="35a5fe23-3967-4f39-b20d-314f6c497a64" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="9d7a2f64-d20f-42fa-aa65-d51604296b4b" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/json --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_payload10.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					<munit-tools:attributes value="#[readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_attributes1.dwl')]" />
+					<munit-tools:variables >
+						<munit-tools:variable key="pdfFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_67.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="countImageFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_68.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="fileName" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_69.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="rootMessage" value="#[readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_70.dwl')]" />
+						<munit-tools:variable key="countpdfFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_71.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="countXmlFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_72.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="imageFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_73.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="xmlArchivedFile" value="#[output application/json --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_74.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="pdfArchivedFile" value="#[output application/json --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_75.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="jpegArchivedFile" value="#[output application/json --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_76.dwl')]" mediaType="application/json" encoding="UTF-8" />
+						<munit-tools:variable key="counter" value="#[readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_77.dwl')]" />
+						<munit-tools:variable key="xmlFile" value="#[output application/java --- readUrl('classpath://musftptosfdcfilestansferapiFlowtest\mock_variable_78.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="67f12814-fc7d-4346-9f45-4214faabccb2" >
+				<munit:payload value="#[readUrl('classpath://musftptosfdcfilestansferapiFlowtest\set-event_payload.dwl')]" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to mu-sftp-to-sfdc-files-tansfer-apiFlow" doc:id="5b7b5491-890c-4b15-9c52-72512c9e5fde" name="mu-sftp-to-sfdc-files-tansfer-apiFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that" doc:id="3771c45b-27e6-4833-bf82-19ad2affa8d3" expression="#[payload]" is="#[MunitTools::notNullValue()]"/>
+		<!--  	<munit-tools:assert doc:name="Assert payload" doc:id="4cae0d80-c852-45a9-aa87-5ae5932f782d" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import musftptosfdcfilestansferapiFlowtest::assert_expression_payload
+-&#45;&#45;
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert> -->
+		</munit:validation>
+	</munit:test>
+
+
+</mule>
